@@ -5,7 +5,7 @@ The R package covid19mx 🇲🇽
 
 ```R
 install.packages("remotes")
-remotes::install_github("mayrop/covid19-mx")
+remotes::install_github("mayrop/r-covid19in-mx")
 ```
 
 ###  Contributing
