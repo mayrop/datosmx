@@ -1,8 +1,8 @@
 #' Get time series for COVID-19 Cases in MX
 #'
 #' @param date Needs to be provided in ISO format YYYY-MM-DD
-#' @param type could be positive, suspected (or in spanish positivos, sospechosos)
-#' 
+#' @param type could be positive, suspected, positivos, sospechosos
+#'
 #' @import lubridate
 #' @keywords covid19, mexico, daily cases
 #' @export
@@ -28,15 +28,6 @@ daily_cases <- function(date, type = "positive") {
   path <- paste0("/tablas-diarias/", type, "/", suffix)
   url <- paste0(domain, path)
 
-  data <- read.csv(url)
-
-  # convert date to ISO format
-  data$Fecha_Sintomas_Normalizado <- lubridate::as_date(
-    data$Fecha_Sintomas_Normalizado
-  )
-  data$Fecha_Llegada_Normalizado <- lubridate::as_date(
-    data$Fecha_Llegada_Normalizado
-  )
-
-  data
+  # todo - error handling
+  read.csv(url)
 }

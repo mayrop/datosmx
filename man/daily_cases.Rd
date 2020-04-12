@@ -6,6 +6,11 @@
 \usage{
 daily_cases(date, type = "positive")
 }
+\arguments{
+\item{date}{Needs to be provided in ISO format YYYY-MM-DD}
+
+\item{type}{could be positive, suspected, positivos, sospechosos}
+}
 \description{
 Get time series for COVID-19 Cases in MX
 }
