@@ -1,5 +1,8 @@
 #' Get time series for COVID-19 Cases in MX
 #'
+#' @param date Needs to be provided in ISO format YYYY-MM-DD
+#' @param type could be positive, suspected (or in spanish positivos, sospechosos)
+#' 
 #' @import lubridate
 #' @keywords covid19, mexico, daily cases
 #' @export
