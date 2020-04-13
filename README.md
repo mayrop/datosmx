@@ -1,6 +1,13 @@
 # Covid19in-mx R Package 🇲🇽
 
-The R package covid19mx 🇲🇽. I created this R package quickly to get data about Coronavirus COVID-19 cases in Mexico that is retrieved [here](https://github.com/mayrop/datos-covid19in-mx)
+The R package covid19mx 🇲🇽.
+
+I am in process of building an R package to get data about the Coronavirus COVID-19 pandemic cases in Mexico.
+
+* Data comes from official sources, more information [here](https://github.com/mayrop/datos-covid19in-mx)
+
+
+**Warning:** This package is under construction!! 🚧 🚧 🚧 
 
 ## Installation
 ```R
@@ -9,8 +16,6 @@ if (!"remotes" %in% installed.packages()) {
 }
 remotes::install_github("mayrop/r-covid19in-mx")
 ```
-
-**Warning:** This package is under construction!!
 
 ## Usage
 
@@ -96,7 +101,7 @@ In RStudio, you can run lintr from the console as follows:
 > lintr::lint_package()
 > library(roxygen2)
 > library("devtools")
-> docudevtools::ment()
+> devtools::document()
 ```
 
 ### License
