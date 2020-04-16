@@ -11,7 +11,7 @@ timeseries_all <- function() {
   data <- read.csv(url)
 
   # convert date to ISO format
-  data$Fecha <- lubridate::as_date(data$Fecha)
+  data[, "Fecha"] <- lubridate::as_date(data$Fecha)
 
   data
 }
@@ -29,7 +29,7 @@ timeseries_totals <- function() {
   data <- read.csv(url)
 
   # convert date to ISO format
-  data$Fecha <- lubridate::as_date(data$Fecha)
+  data[, "Fecha"] <- lubridate::as_date(data$Fecha)
 
   data
 }

@@ -32,7 +32,7 @@ get_covid_cases <- function(date="today", dataset="open", subset="positive") {
     data <- read.csv(unz(temp, basename))
     unlink(temp)
   } else {
-    data <- read.csv(url, stringsAsFactors=FALSE)
+    data <- read.csv(url, stringsAsFactors = FALSE)
   }
 
   data
@@ -46,7 +46,8 @@ get_covid_cases <- function(date="today", dataset="open", subset="positive") {
 #'
 #' @export
 get_covid_meta <- function() {
-  read.csv("https://datos.covid19in.mx/meta/files.csv", stringsAsFactors=FALSE)
+  file <- "https://datos.covid19in.mx/meta/files.csv"
+  read.csv(file, stringsAsFactors = FALSE)
 }
 
 
@@ -58,7 +59,7 @@ get_covid_meta <- function() {
 get_cases_meta <- function(date="today", dataset="open", subset="positive") {
   if (date == "today") {
     # Get today's date
-    date <- format(Sys.Date(), format="%Y-%m-%d")
+    date <- format(Sys.Date(), format = "%Y-%m-%d")
   }
 
   if (!grepl("\\d{4}-\\d{2}-\\d{2}", date)) {
@@ -77,24 +78,26 @@ get_cases_meta <- function(date="today", dataset="open", subset="positive") {
 
   if (dataset == "open") {
     dataset <- "abiertos"
-    file <- meta[meta$Type==dataset & meta$Date==date, ]
-    all <- meta[meta$Type==dataset, ]
+    file <- meta[meta$Type == dataset & meta$Date == date, ]
+    all <- meta[meta$Type == dataset, ]
   } else {
     # dataset is ctv
-    dataset="tablas_diarias"
+    dataset <- "tablas_diarias"
 
     subset <- gsub("positive", "positivos", subset)
     subset <- gsub("suspected", "sospechosos", subset)
 
-    file <- meta[meta$Type==dataset & meta$Date==date & meta$Subtype==subset, ]
-    all <- meta[meta$Type==dataset & meta$Subtype==subset, ]
+    file <- meta[
+      meta$Type == dataset & meta$Date == date & meta$Subtype == subset,
+    ]
+    all <- meta[meta$Type == dataset & meta$Subtype == subset, ]
   }
 
   return(
     list(
-      isAvailable=ifelse(nrow(file)==1, TRUE, FALSE),
-      meta=file,
-      last=all[1:5, ]
+      isAvailable = ifelse(nrow(file) == 1, TRUE, FALSE),
+      meta = file,
+      last = all[1:5, ]
     )
   )
 }
@@ -110,7 +113,7 @@ get_covid_timeseries <- function() {
   # todo - documentation
   url <- "https://datos.covid19in.mx/series-de-tiempo/agregados/federal.csv"
 
-  read.csv(url, stringsAsFactors=FALSE)
+  read.csv(url, stringsAsFactors = FALSE)
 }
 
 
@@ -119,7 +122,7 @@ get_covid_timeseries <- function() {
 #' @keywords covid19, mexico, daily cases
 #'
 #' @export
-get_covid_descriptions() <- function() {
+get_covid_descriptions <- function() {
   file <- "https://datos.covid19in.mx/abiertos/descriptores.yaml"
   lapply(yaml::read_yaml(file), as.data.frame)
 }
@@ -128,145 +131,173 @@ get_covid_descriptions() <- function() {
 #' Joins open data with the descriptions
 #'
 #' @keywords covid19, mexico, daily cases
-#'
+#' @import dplyr
 #' @export
 complete_covid <- function(input, descriptions) {
   input %>%
-    dplyr::left_join(descriptions$origin, by=c("ORIGEN"="CLAVE")) %>%
+    dplyr::left_join(descriptions$origin,
+                     by = c("ORIGEN" = "CLAVE")) %>%
     dplyr::rename(
-      ORIGEN_FACTOR=DESCRIPCION
+      ORIGEN_FACTOR = DESCRIPCION
     ) %>%
     # adding sector
-    dplyr::left_join(descriptions$sector, by=c("SECTOR"="CLAVE")) %>%
+    dplyr::left_join(descriptions$sector,
+                     by = c("SECTOR" = "CLAVE")) %>%
     dplyr::rename(
-      SECTOR_FACTOR=DESCRIPCION
+      SECTOR_FACTOR = DESCRIPCION
     ) %>%
     # adding state that gave attention
-    dplyr::left_join(descriptions$states, by=c("ENTIDAD_UM"="CLAVE_ENTIDAD")) %>%
+    dplyr::left_join(descriptions$states,
+                     by = c("ENTIDAD_UM" = "CLAVE_ENTIDAD")) %>%
     dplyr::rename(
-      ENTIDAD_UM_FACTOR=ENTIDAD_FEDERATIVA
+      ENTIDAD_UM_FACTOR = ENTIDAD_FEDERATIVA
     ) %>%
     dplyr::select(-ABREVIATURA) %>%
     # adding sex
-    dplyr::left_join(descriptions$sex, by=c("SEXO"="CLAVE")) %>%
+    dplyr::left_join(descriptions$sex,
+                     by = c("SEXO" = "CLAVE")) %>%
     dplyr::rename(
-      SEXO_FACTOR=DESCRIPCION
+      SEXO_FACTOR = DESCRIPCION
     ) %>%
     # adding state where patient was born
-    dplyr::left_join(descriptions$states, by=c("ENTIDAD_NAC"="CLAVE_ENTIDAD")) %>%
+    dplyr::left_join(descriptions$states,
+                     by = c("ENTIDAD_NAC" = "CLAVE_ENTIDAD")) %>%
     dplyr::rename(
-      ENTIDAD_NAC_FACTOR=ENTIDAD_FEDERATIVA
+      ENTIDAD_NAC_FACTOR = ENTIDAD_FEDERATIVA
     ) %>%
     dplyr::select(-ABREVIATURA) %>%
     # adding patient's state of residency
-    dplyr::left_join(descriptions$states, by=c("ENTIDAD_RES"="CLAVE_ENTIDAD")) %>%
+    dplyr::left_join(descriptions$states,
+                     by = c("ENTIDAD_RES" = "CLAVE_ENTIDAD")) %>%
     dplyr::rename(
-      ENTIDAD_RES_FACTOR=ENTIDAD_FEDERATIVA
+      ENTIDAD_RES_FACTOR = ENTIDAD_FEDERATIVA
     ) %>%
     dplyr::select(-ABREVIATURA) %>%
     # adding patient's city of residency
-    dplyr::left_join(descriptions$cities, by=c("ENTIDAD_RES"="CLAVE_ENTIDAD", "MUNICIPIO_RES"="CLAVE_MUNICIPIO")) %>%
+    dplyr::left_join(descriptions$cities,
+                     by = c("ENTIDAD_RES" = "CLAVE_ENTIDAD",
+                            "MUNICIPIO_RES" = "CLAVE_MUNICIPIO")) %>%
     dplyr::rename(
-      MUNICIPIO_RES_FACTOR=MUNICIPIO
+      MUNICIPIO_RES_FACTOR = MUNICIPIO
     ) %>%
     # adding patient's type
-    dplyr::left_join(descriptions$patient_type, by=c("TIPO_PACIENTE"="CLAVE")) %>%
+    dplyr::left_join(descriptions$patient_type,
+                     by = c("TIPO_PACIENTE" = "CLAVE")) %>%
     dplyr::rename(
-      TIPO_PACIENTE_FACTOR=DESCRIPCION
+      TIPO_PACIENTE_FACTOR = DESCRIPCION
     ) %>%
     # ? intubated
-    dplyr::left_join(descriptions$yes_no, by=c("INTUBADO"="CLAVE")) %>%
+    dplyr::left_join(descriptions$yes_no,
+                     by = c("INTUBADO" = "CLAVE")) %>%
     dplyr::rename(
-      INTUBADO_FACTOR=DESCRIPCION
+      INTUBADO_FACTOR = DESCRIPCION
     ) %>%
     # ? pneumonia
-    dplyr::left_join(descriptions$yes_no, by=c("NEUMONIA"="CLAVE")) %>%
+    dplyr::left_join(descriptions$yes_no,
+                     by = c("NEUMONIA" = "CLAVE")) %>%
     dplyr::rename(
-      NEUMONIA_FACTOR=DESCRIPCION
+      NEUMONIA_FACTOR = DESCRIPCION
     ) %>%
     # ? pregnant
-    dplyr::left_join(descriptions$yes_no, by=c("EMBARAZO"="CLAVE")) %>%
+    dplyr::left_join(descriptions$yes_no,
+                     by = c("EMBARAZO" = "CLAVE")) %>%
     dplyr::rename(
-      EMBARAZO_FACTOR=DESCRIPCION
+      EMBARAZO_FACTOR = DESCRIPCION
     ) %>%
     # ? speaks native language
-    dplyr::left_join(descriptions$yes_no, by=c("HABLA_LENGUA_INDI"="CLAVE")) %>%
+    dplyr::left_join(descriptions$yes_no,
+                     by = c("HABLA_LENGUA_INDI" = "CLAVE")) %>%
     dplyr::rename(
-      HABLA_LENGUA_INDI_FACTOR=DESCRIPCION
+      HABLA_LENGUA_INDI_FACTOR = DESCRIPCION
     ) %>%
     # ? diabetes
-    dplyr::left_join(descriptions$yes_no, by=c("DIABETES"="CLAVE")) %>%
+    dplyr::left_join(descriptions$yes_no,
+                     by = c("DIABETES" = "CLAVE")) %>%
     dplyr::rename(
-      DIABETES_FACTOR=DESCRIPCION
+      DIABETES_FACTOR = DESCRIPCION
     ) %>%
     # ? epoc
-    dplyr::left_join(descriptions$yes_no, by=c("EPOC"="CLAVE")) %>%
+    dplyr::left_join(descriptions$yes_no,
+                     by = c("EPOC" = "CLAVE")) %>%
     dplyr::rename(
-      EPOC_FACTOR=DESCRIPCION
+      EPOC_FACTOR = DESCRIPCION
     ) %>%
     # ? asthma
-    dplyr::left_join(descriptions$yes_no, by=c("ASMA"="CLAVE")) %>%
+    dplyr::left_join(descriptions$yes_no,
+                     by = c("ASMA" = "CLAVE")) %>%
     dplyr::rename(
-      ASMA_FACTOR=DESCRIPCION
+      ASMA_FACTOR = DESCRIPCION
     ) %>%
     # ? immunosuppression
-    dplyr::left_join(descriptions$yes_no, by=c("INMUSUPR"="CLAVE")) %>%
+    dplyr::left_join(descriptions$yes_no,
+                     by = c("INMUSUPR" = "CLAVE")) %>%
     dplyr::rename(
-      INMUSUPR_FACTOR=DESCRIPCION
+      INMUSUPR_FACTOR = DESCRIPCION
     ) %>%
     # ? hypertension
-    dplyr::left_join(descriptions$yes_no, by=c("HIPERTENSION"="CLAVE")) %>%
+    dplyr::left_join(descriptions$yes_no,
+                     by = c("HIPERTENSION" = "CLAVE")) %>%
     dplyr::rename(
-      HIPERTENSION_FACTOR=DESCRIPCION
+      HIPERTENSION_FACTOR = DESCRIPCION
     ) %>%
     # ? other diseases
-    dplyr::left_join(descriptions$yes_no, by=c("OTRA_CON"="CLAVE")) %>%
+    dplyr::left_join(descriptions$yes_no,
+                     by = c("OTRA_CON" = "CLAVE")) %>%
     dplyr::rename(
-      OTRA_CON_FACTOR=DESCRIPCION
+      OTRA_CON_FACTOR = DESCRIPCION
     ) %>%
     # ? cardiovascular
-    dplyr::left_join(descriptions$yes_no, by=c("CARDIOVASCULAR"="CLAVE")) %>%
+    dplyr::left_join(descriptions$yes_no,
+                     by = c("CARDIOVASCULAR" = "CLAVE")) %>%
     dplyr::rename(
-      CARDIOVASCULAR_FACTOR=DESCRIPCION
+      CARDIOVASCULAR_FACTOR = DESCRIPCION
     ) %>%
     # ? obesity
-    dplyr::left_join(descriptions$yes_no, by=c("OBESIDAD"="CLAVE")) %>%
+    dplyr::left_join(descriptions$yes_no,
+                     by = c("OBESIDAD" = "CLAVE")) %>%
     dplyr::rename(
-      OBESIDAD_FACTOR=DESCRIPCION
+      OBESIDAD_FACTOR = DESCRIPCION
     ) %>%
     # ? renal chronic
-    dplyr::left_join(descriptions$yes_no, by=c("RENAL_CRONICA"="CLAVE")) %>%
+    dplyr::left_join(descriptions$yes_no,
+                     by = c("RENAL_CRONICA" = "CLAVE")) %>%
     dplyr::rename(
-      RENAL_CRONICA_FACTOR=DESCRIPCION
+      RENAL_CRONICA_FACTOR = DESCRIPCION
     ) %>%
     # ? smoker
-    dplyr::left_join(descriptions$yes_no, by=c("TABAQUISMO"="CLAVE")) %>%
+    dplyr::left_join(descriptions$yes_no,
+                     by = c("TABAQUISMO" = "CLAVE")) %>%
     dplyr::rename(
-      TABAQUISMO_FACTOR=DESCRIPCION
+      TABAQUISMO_FACTOR = DESCRIPCION
     ) %>%
     # ? contact with other case?
-    dplyr::left_join(descriptions$yes_no, by=c("OTRO_CASO"="CLAVE")) %>%
+    dplyr::left_join(descriptions$yes_no,
+                     by = c("OTRO_CASO" = "CLAVE")) %>%
     dplyr::rename(
-      OTRO_CASO_FACTOR=DESCRIPCION
+      OTRO_CASO_FACTOR = DESCRIPCION
     ) %>%
     # ? migrant
-    dplyr::left_join(descriptions$yes_no, by=c("MIGRANTE"="CLAVE")) %>%
+    dplyr::left_join(descriptions$yes_no,
+                     by = c("MIGRANTE" = "CLAVE")) %>%
     dplyr::rename(
-      MIGRANTE_FACTOR=DESCRIPCION
+      MIGRANTE_FACTOR = DESCRIPCION
     ) %>%
     # ? uci
-    dplyr::left_join(descriptions$yes_no, by=c("UCI"="CLAVE")) %>%
+    dplyr::left_join(descriptions$yes_no,
+                     by = c("UCI" = "CLAVE")) %>%
     dplyr::rename(
-      UCI_FACTOR=DESCRIPCION
+      UCI_FACTOR = DESCRIPCION
     ) %>%
     # adding result factor
-    dplyr::left_join(descriptions$result, by=c("RESULTADO"="CLAVE")) %>%
+    dplyr::left_join(descriptions$result,
+                     by = c("RESULTADO" = "CLAVE")) %>%
     dplyr::rename(
-      RESULTADO_FACTOR=DESCRIPCION
+      RESULTADO_FACTOR = DESCRIPCION
     ) %>%
     # adding nationality
-    dplyr::left_join(descriptions$nationality, by=c("NACIONALIDAD"="CLAVE")) %>%
+    dplyr::left_join(descriptions$nationality,
+                     by = c("NACIONALIDAD" = "CLAVE")) %>%
     dplyr::rename(
-      NACIONALIDAD_FACTOR=DESCRIPCION
+      NACIONALIDAD_FACTOR = DESCRIPCION
     )
 }
