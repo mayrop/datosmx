@@ -14,7 +14,7 @@ I am in process of building an R package to get data about the Coronavirus COVID
 if (!"remotes" %in% installed.packages()) {
   install.packages("remotes")
 }
-remotes::install_github("mayrop/r-covid19in-mx")
+remotes::install_github("mayrop/covid19mx")
 ```
 
 ## Usage
