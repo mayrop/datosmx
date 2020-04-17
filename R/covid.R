@@ -30,13 +30,17 @@ get_covid_cases <- function(date="latest", dataset="open", subset="positive") {
     temp <- tempfile()
     basename <- gsub(".zip", ".csv", basename(url))
     download.file(url, temp)
-    data <- read.csv(unz(temp, basename))
+    df <- read.csv(unz(temp, basename))
     unlink(temp)
   } else {
-    data <- read.csv(url, stringsAsFactors = FALSE)
+    df <- read.csv(url)
+
+    if (dataset == "open") {
+      validate_covid_structure(df, stop = TRUE)
+    }
   }
 
-  data
+  df
 }
 
 
@@ -70,7 +74,8 @@ get_covid_meta <- function() {
 #' @keywords covid19, mexico, daily cases
 #'
 #' @export
-get_covid_cases_meta <- function(date="latest", dataset="open", subset="positive") {
+get_covid_cases_meta <- function(date="latest", dataset="open",
+                                 subset="positive") {
   if (date == "today") {
     # Get today's date
     date <- format(Sys.Date(), format = "%Y-%m-%d")
@@ -159,8 +164,12 @@ get_covid_descriptions <- function() {
 #' @keywords covid19, mexico, daily cases
 #' @import dplyr
 #' @export
-complete_covid <- function(input, descriptions) {
-  input %>%
+complete_covid_cases <- function(cases, descriptions) {
+
+  cases <- rename_old_covid_columns(cases, warnings = TRUE)
+  validate_covid_structure(cases, stop = TRUE)
+
+  cases %>%
     dplyr::left_join(descriptions$origin,
                      by = c("ORIGEN" = "CLAVE")) %>%
     dplyr::rename(
@@ -232,9 +241,9 @@ complete_covid <- function(input, descriptions) {
     ) %>%
     # ? speaks native language
     dplyr::left_join(descriptions$yes_no,
-                     by = c("HABLA_LENGUA_INDI" = "CLAVE")) %>%
+                     by = c("HABLA_LENGUA_INDIG" = "CLAVE")) %>%
     dplyr::rename(
-      HABLA_LENGUA_INDI_FACTOR = DESCRIPCION
+      HABLA_LENGUA_INDIG_FACTOR = DESCRIPCION
     ) %>%
     # ? diabetes
     dplyr::left_join(descriptions$yes_no,
@@ -268,9 +277,9 @@ complete_covid <- function(input, descriptions) {
     ) %>%
     # ? other diseases
     dplyr::left_join(descriptions$yes_no,
-                     by = c("OTRA_CON" = "CLAVE")) %>%
+                     by = c("OTRA_COM" = "CLAVE")) %>%
     dplyr::rename(
-      OTRA_CON_FACTOR = DESCRIPCION
+      OTRA_COM_FACTOR = DESCRIPCION
     ) %>%
     # ? cardiovascular
     dplyr::left_join(descriptions$yes_no,
@@ -326,4 +335,87 @@ complete_covid <- function(input, descriptions) {
     dplyr::rename(
       NACIONALIDAD_FACTOR = DESCRIPCION
     )
+}
+
+
+#' Fixes structure prior to April 16
+#' @import dplyr
+rename_old_covid_columns <- function(df, warnings = FALSE) {
+  # Renaming variables with typos (prior to April 16)
+  if ("HABLA_LENGUA_INDI" %in% names(df)) {
+    if (isTRUE(warnings)) {
+      warning("Adding HABLA_LENGUA_INDIG variable from HABLA_LENGUA_INDI")
+    }
+
+    df <- df %>%
+      dplyr::mutate(
+        HABLA_LENGUA_INDIG = HABLA_LENGUA_INDI,
+      )
+  }
+
+  # Renaming variables with typos (prior to April 16)
+  if ("OTRA_CON" %in% names(df)) {
+    if (isTRUE(warnings)) {
+      warning("Adding OTRA_COM variable from OTRA_CON")
+    }
+
+    df <- df %>%
+      dplyr::mutate(
+        OTRA_COM = OTRA_CON,
+      )
+  }
+}
+
+
+#' Validates structure of dataset
+#'
+#' @keywords covid19, mexico, daily cases
+#' @import dplyr
+validate_covid_structure <- function(df, stop = FALSE) {
+  cols <- c("FECHA_ACTUALIZACION",
+            "ORIGEN",
+            "ENTIDAD_UM",
+            "SEXO",
+            "ENTIDAD_NAC",
+            "ENTIDAD_RES",
+            "MUNICIPIO_RES",
+            "TIPO_PACIENTE",
+            "FECHA_INGRESO",
+            "FECHA_SINTOMAS",
+            "FECHA_DEF",
+            "INTUBADO",
+            "NEUMONIA",
+            "EDAD",
+            "NACIONALIDAD",
+            "EMBARAZO",
+            "HABLA_LENGUA_INDIG",
+            "DIABETES",
+            "EPOC",
+            "ASMA",
+            "INMUSUPR",
+            "HIPERTENSION",
+            "OTRA_COM",
+            "CARDIOVASCULAR",
+            "OBESIDAD",
+            "RENAL_CRONICA",
+            "TABAQUISMO",
+            "OTRO_CASO",
+            "RESULTADO",
+            "MIGRANTE",
+            "PAIS_NACIONALIDAD",
+            "PAIS_ORIGEN",
+            "UCI")
+
+  differences <- setdiff(cols, colnames(df))
+
+  if (length(differences) > 0) {
+    if (stop) {
+      stop(paste0("Could not join, missing columns in dataframe: ",
+                  paste0(" ", differences, collapse = ",")))
+    } else {
+      warning(paste0("Dataset has different structure than usual...
+                     missing columns",
+                  paste0(" ", differences, collapse = ",")))
+    }
+  }
 }
