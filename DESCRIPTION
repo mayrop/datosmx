@@ -1,7 +1,8 @@
-Package: covid19mx
-Title: Get data about cases of COVID 19 cases in Mexico.
-Version: 0.0.1.9000
-Date: 2020-04-15
+Package: datosmx
+Title: Mexico datasets including cases of COVID 19, population 
+  and geographical coordinates of cities and states in Mexico.
+Version: 0.0.1.9001
+Date: 2020-04-16
 Authors@R: 
     person(given = "Mayra",
            family = "Valdes",
@@ -9,10 +10,13 @@ Authors@R:
            email = "4valdes@gmail.com",
            comment = c(ORCID = "0000-0002-3963-5586"))
 Description: 
-  This is a package to obtain data for COVID 19 cases in Mexico. 
-  Data comes from https://github.com/mayrop/datos-covid19in-mx
-URL: https://github.com/mayrop/covid19mx
-BugReports: https://github.com/mayrop/covid19mx/issues
+  This is a package started as an alternative to obtain data 
+  for COVID 19 cases in Mexico. It has been extended to other 
+  datasets for Mexico data including population and geographical 
+  coordinates for cities and states in Mexico. All data comes from
+  official sources.
+URL: https://github.com/mayrop/datosmx
+BugReports: https://github.com/mayrop/datosmx/issues
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
