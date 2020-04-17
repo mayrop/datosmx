@@ -364,6 +364,8 @@ rename_old_covid_columns <- function(df, warnings = FALSE) {
         OTRA_COM = OTRA_CON,
       )
   }
+
+  df
 }
 
 
