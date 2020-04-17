@@ -3,14 +3,14 @@ context("Covid19 Tests")
 # need to add
 # https://cran.r-project.org/web/packages/httptest/vignettes/httptest.html
 test_that("meta file can be retrieved", {
-  meta <- get_cases_meta(date = "2020-04-12", dataset = "ctd")
+  meta <- get_covid_cases_meta(date = "2020-04-12", dataset = "ctd")
   expect_equal(meta$isAvailable, TRUE)
   expect_equal(meta$meta$Basename, "20200412")
   expect_equal(nrow(meta$last), 5)
 })
 
 test_that("meta file can returns false", {
-  meta <- get_cases_meta(date = "2020-02-12", dataset = "ctd")
+  meta <- get_covid_cases_meta(date = "2020-02-12", dataset = "ctd")
   expect_equal(meta$isAvailable, FALSE)
   expect_equal(nrow(meta$meta), 0)
   expect_equal(nrow(meta$last), 5)

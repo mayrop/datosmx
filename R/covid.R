@@ -3,7 +3,8 @@
 #' @param date Needs to be provided in ISO format YYYY-MM-DD.
 #'   Note that you might need to add
 #'   Sys.setenv(TZ = "America/Mexico_City") if you are in a
-#'   different timezone
+#'   different timezone. You can specify "today" but it is
+#'   better to leave it to the default "latest"
 #' @param dataset could be open, or "ctd", "ctd" stands for
 #'   "Comunicado Tecnico Diario" (Daily Technical Release).
 #'   The open data only exists after April 13th, 2020.
@@ -15,8 +16,8 @@
 #' @keywords covid19, mexico, daily cases
 #'
 #' @export
-get_covid_cases <- function(date="today", dataset="open", subset="positive") {
-  result <- get_cases_meta(date, dataset, subset)
+get_covid_cases <- function(date="latest", dataset="open", subset="positive") {
+  result <- get_covid_cases_meta(date, dataset, subset)
 
   if (isFALSE(result$isAvailable)) {
     stop(paste0("File is not available for: ", date, " ", dataset, " dataset"))
@@ -53,16 +54,29 @@ get_covid_meta <- function() {
 
 #' Get the meta for specific date, datset & subset
 #'
+#' @param date Needs to be provided in ISO format YYYY-MM-DD.
+#'   Note that you might need to add
+#'   Sys.setenv(TZ = "America/Mexico_City") if you are in a
+#'   different timezone. You can specify "today" but it is
+#'   better to leave it to the default "latest"
+#' @param dataset could be open, or "ctd", "ctd" stands for
+#'   "Comunicado Tecnico Diario" (Daily Technical Release).
+#'   The open data only exists after April 13th, 2020.
+#' @param subset if dataset ctd is preferred, you need to select
+#'   a subset (positive or suspected), otherwise this argument
+#'   is ignored. In the future they may be condensed into a
+#'   single dataset
+#'
 #' @keywords covid19, mexico, daily cases
 #'
 #' @export
-get_cases_meta <- function(date="today", dataset="open", subset="positive") {
+get_covid_cases_meta <- function(date="latest", dataset="open", subset="positive") {
   if (date == "today") {
     # Get today's date
     date <- format(Sys.Date(), format = "%Y-%m-%d")
   }
 
-  if (!grepl("\\d{4}-\\d{2}-\\d{2}", date)) {
+  if (!grepl("\\d{4}-\\d{2}-\\d{2}", date) & date != "latest") {
     stop(paste0("Date was provided in invalid format, try: YYYY-MM-DD: ", date))
   }
 
@@ -78,7 +92,15 @@ get_cases_meta <- function(date="today", dataset="open", subset="positive") {
 
   if (dataset == "open") {
     dataset <- "abiertos"
-    file <- meta[meta$Type == dataset & meta$Date == date, ]
+
+    if (date == "latest") {
+      # we extract latest file
+      file <- meta[meta$Type == dataset, ]
+      file <- file[1, ]
+    } else {
+      file <- meta[meta$Type == dataset & meta$Date == date, ]
+    }
+
     all <- meta[meta$Type == dataset, ]
   } else {
     # dataset is ctv
@@ -86,10 +108,15 @@ get_cases_meta <- function(date="today", dataset="open", subset="positive") {
 
     subset <- gsub("positive", "positivos", subset)
     subset <- gsub("suspected", "sospechosos", subset)
-
-    file <- meta[
-      meta$Type == dataset & meta$Date == date & meta$Subtype == subset,
-    ]
+    if (date == "latest") {
+      # we extract latest file
+      file <- meta[meta$Type == dataset & meta$Subtype == subset, ]
+      file <- file[1, ]
+    } else {
+      file <- meta[
+        meta$Type == dataset & meta$Date == date & meta$Subtype == subset,
+      ]
+    }
     all <- meta[meta$Type == dataset & meta$Subtype == subset, ]
   }
 
@@ -105,7 +132,6 @@ get_cases_meta <- function(date="today", dataset="open", subset="positive") {
 
 #' Get time series for COVID-19 Cases in MX
 #'
-#' @import lubridate
 #' @keywords covid19, mexico, timeseries
 #' @export
 get_covid_timeseries <- function() {
