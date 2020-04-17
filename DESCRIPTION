@@ -1,7 +1,7 @@
 Package: datosmx
 Title: Mexico datasets including cases of COVID 19, population 
   and geographical coordinates of cities and states in Mexico.
-Version: 0.0.1.9007
+Version: 0.0.1.9009
 Date: 2020-04-17
 Authors@R: 
     person(given = "Mayra",
