@@ -5,11 +5,7 @@
 
 The R package datosmx 🇲🇽.
 
-I am in process of building an R package to get data about the Novel Coronavirus COVID-19 pandemic cases in Mexico and other datasets.
-
-* Data comes from official sources, more information [here](https://github.com/mayrop/datos-covid19in-mx)
-
-**Warning:** This package is under construction!! 🚧 🚧 🚧 
+R package (**Warning:** currently under construction 🚧 🚧 🚧 ) to get data about the Novel Coronavirus COVID-19 pandemic cases in Mexico and other Mexico datasets (geospatial + population). Data comes from official sources, more information [here](https://github.com/mayrop/datos-covid19in-mx).
 
 ## Installation
 ```R
