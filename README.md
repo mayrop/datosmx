@@ -96,30 +96,36 @@ cases <- datosmx::get_covid_cases(dataset = "ctd")
 
 
 ### Generic Datasets (Geo + Population)
+
+#### Cities
 ```r
 cities <- datosmx::get_cities()
-states <- datosmx::get_states()
 
 > str(cities)
-'data.frame':   2458 obs. of  6 variables:
+'data.frame': 2458 obs. of  6 variables:
  $ Clave_Entidad  : int  1 1 1 1 1 1 1 1 1 1 ...
  $ Clave_Municipio: int  1 2 3 4 5 6 7 8 9 10 ...
  $ Nombre         : chr  "Aguascalientes" "Asientos" "Calvillo" "Cosío" ...
  $ Longitud       : num  -102 -102 -103 -102 -102 ...
  $ Latitud        : num  21.8 22.1 21.9 22.4 21.9 ...
- $ Poblacion_2020 : int  961977 50864 60760 16918 130184 50032 57981 9661 22743 21947 ...
+ $ Poblacion_2019 : int  949277 50354 60181 16766 127835 49479 57359 9551 22468 21710 ...
  
- > head(cities)
-  Clave_Entidad Clave_Municipio              Nombre  Longitud  Latitud Poblacion_2020
-1             1               1      Aguascalientes -102.2958 21.81144         961977
-2             1               2            Asientos -102.0456 22.12651          50864
-3             1               3            Calvillo -102.7049 21.90069          60760
-4             1               4               Cosío -102.2970 22.36063          16918
-5             1               5         Jesús María -102.4456 21.93212         130184
-6             1               6 Pabellón de Arteaga -102.3017 22.10454          50032
+> head(cities)
+  Clave_Entidad Clave_Municipio              Nombre  Longitud  Latitud Poblacion_2019
+1             1               1      Aguascalientes -102.2958 21.81144         949277
+2             1               2            Asientos -102.0456 22.12651          50354
+3             1               3            Calvillo -102.7049 21.90069          60181
+4             1               4               Cosío -102.2970 22.36063          16766
+5             1               5         Jesús María -102.4456 21.93212         127835
+6             1               6 Pabellón de Arteaga -102.3017 22.10454          49479
+```
+
+#### States
+```r
+states <- datosmx::get_states()
 
 > str(states)
-'data.frame':   32 obs. of  10 variables:
+'data.frame': 32 obs. of  10 variables:
  $ Clave           : int  1 2 3 4 5 6 7 8 9 10 ...
  $ Nombre          : chr  "Aguascalientes" "Baja California" "Baja California Sur" "Campeche" ...
  $ Nombre_Mayuscula: chr  "AGUASCALIENTES" "BAJA CALIFORNIA" "BAJA CALIFORNIA SUR" "CAMPECHE" ...
@@ -129,16 +135,16 @@ states <- datosmx::get_states()
  $ ISO_2           : chr  "AS" "BC" "BS" "CC" ...
  $ Longitud        : num  -102.4 -115.1 -112.1 -90.4 -102 ...
  $ Latitud         : num  22 30.6 25.9 18.8 27.3 ...
- $ Poblacion_2020  : int  1434635 3634868 804708 1000617 3218720 785153 5730367 3801487 9018645 1868996 ...
+ $ Poblacion_2019  : int  1415421 3578561 788119 984046 3175643 772842 5647532 3765325 9031213 1852952 ...
  
- > head(states)
-  Clave              Nombre    Nombre_Mayuscula      Nombre_Completo Abreviatura ISO_3 ISO_2   Longitud  Latitud Poblacion_2020
-1     1      Aguascalientes      AGUASCALIENTES       Aguascalientes        Ags.   AGU    AS -102.36194 22.00644        1434635
-2     2     Baja California     BAJA CALIFORNIA      Baja California       B. C.   BCN    BC -115.09707 30.55159        3634868
-3     3 Baja California Sur BAJA CALIFORNIA SUR  Baja California Sur    B. C. S.   BCS    BS -112.06620 25.91871         804708
-4     4            Campeche            CAMPECHE             Campeche       Camp.   CAM    CC  -90.36028 18.84055        1000617
-5     5            Coahuila            COAHUILA Coahuila de Zaragoza       Coah.   COA    CL -102.04404 27.29544        3218720
-6     6              Colima              COLIMA               Colima        Col.   COL    CM -104.11512 19.13068         785153
+> head(states)
+  Clave              Nombre    Nombre_Mayuscula      Nombre_Completo Abreviatura ISO_3 ISO_2   Longitud  Latitud Poblacion_2019
+1     1      Aguascalientes      AGUASCALIENTES       Aguascalientes        Ags.   AGU    AS -102.36194 22.00644        1415421
+2     2     Baja California     BAJA CALIFORNIA      Baja California       B. C.   BCN    BC -115.09707 30.55159        3578561
+3     3 Baja California Sur BAJA CALIFORNIA SUR  Baja California Sur    B. C. S.   BCS    BS -112.06620 25.91871         788119
+4     4            Campeche            CAMPECHE             Campeche       Camp.   CAM    CC  -90.36028 18.84055         984046
+5     5            Coahuila            COAHUILA Coahuila de Zaragoza       Coah.   COA    CL -102.04404 27.29544        3175643
+6     6              Colima              COLIMA               Colima        Col.   COL    CM -104.11512 19.13068         772842
 ```
 
 ### Joining Cities and States Datasets
@@ -154,13 +160,13 @@ cities %>%
   ) %>% 
   str()
   
-'data.frame':   2458 obs. of  15 variables:
+'data.frame': 2458 obs. of  15 variables:
  $ Clave_Entidad           : int  1 1 1 1 1 1 1 1 1 1 ...
  $ Clave_Municipio         : int  1 2 3 4 5 6 7 8 9 10 ...
  $ Nombre_Municipio        : chr  "Aguascalientes" "Asientos" "Calvillo" "Cosío" ...
  $ Longitud_Municipio      : num  -102 -102 -103 -102 -102 ...
  $ Latitud_Municipio       : num  21.8 22.1 21.9 22.4 21.9 ...
- $ Poblacion_2020_Municipio: int  961977 50864 60760 16918 130184 50032 57981 9661 22743 21947 ...
+ $ Poblacion_2019_Municipio: int  949277 50354 60181 16766 127835 49479 57359 9551 22468 21710 ...
  $ Nombre_Entidad          : chr  "Aguascalientes" "Aguascalientes" "Aguascalientes" "Aguascalientes" ...
  $ Nombre_Mayuscula_Entidad: chr  "AGUASCALIENTES" "AGUASCALIENTES" "AGUASCALIENTES" "AGUASCALIENTES" ...
  $ Nombre_Completo_Entidad : chr  "Aguascalientes" "Aguascalientes" "Aguascalientes" "Aguascalientes" ...
@@ -169,7 +175,7 @@ cities %>%
  $ ISO_2_Entidad           : chr  "AS" "AS" "AS" "AS" ...
  $ Longitud_Entidad        : num  -102 -102 -102 -102 -102 ...
  $ Latitud_Entidad         : num  22 22 22 22 22 ...
- $ Poblacion_2020_Entidad  : int  1434635 1434635 1434635 1434635 1434635 1434635 1434635 1434635 1434635 1434635 ...
+ $ Poblacion_2019_Entidad  : int  1415421 1415421 1415421 1415421 1415421 1415421 1415421 1415421 1415421 1415421 ...
 
 ```
 
