@@ -146,7 +146,7 @@ states <- datosmx::get_states()
 ### Joining Cities and States Datasets
 ```r
 cities %>% 
-  dplyr::rename_at(vars(Nombre:Poblacion_2020), function(x) {
+  dplyr::rename_at(vars(Nombre:Poblacion_2019), function(x) {
     paste0(x, "_Municipio")
   }) %>%
   dplyr::left_join(
