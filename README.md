@@ -68,7 +68,7 @@ all %>% as_tibble()
 ##   MIGRANTE_FACTOR <fct>, UCI_FACTOR <fct>, RESULTADO_FACTOR <fct>, NACIONALIDAD_FACTOR <fct>
 
 # If you want historical data...
-cases <- datosmx::get_covid_cases(date="2020-04-12")
+cases <- datosmx::get_covid_cases(date = "2020-04-12")
 ## trying URL 'https://datos.covid19in.mx/abiertos/todos/202004/20200412.zip'
 ## Content type 'application/zip' length 735960 bytes (718 KB)
 ## ==================================================
@@ -105,7 +105,7 @@ datosmx::get_covid_timeseries() %>% as_tibble()
 #### Data from Daily Technical Releases (Comunicado Técnico Diario)
 Latest update for this dataset is April 18, 2020, the last day the SSa published that dataset.
 ```r
-cases <- datosmx::get_covid_cases(date="2020-04-18", dataset = "ctd")
+cases <- datosmx::get_covid_cases(date = "2020-04-18", dataset = "ctd")
 str(cases)
 
 ##'data.frame': 7497 obs. of  17 variables:
