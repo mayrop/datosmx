@@ -42,20 +42,30 @@ descriptions <- datosmx::get_covid_descriptions()
 all <- datosmx::complete_covid_cases(cases, descriptions)
 
 all %>% as_tibble()
-## # A tibble: 62,334 x 62
-##    FECHA_ACTUALIZA… ID_REGISTRO ORIGEN SECTOR ENTIDAD_UM  SEXO ENTIDAD_NAC
-##    <fct>            <fct>        <int>  <int>      <int> <int>       <int>
-##  1 2020-04-24       09e8dc           2      9         15     1          15
-##  2 2020-04-24       1dd782           2     12          9     1          15
-##  3 2020-04-24       0efbaf           2      9         28     2          16
-##  4 2020-04-24       013a6c           1      3         15     2          15
-##  5 2020-04-24       091a48           1     12         15     2          15
-##  6 2020-04-24       1a72fe           1     12          9     1           9
-##  7 2020-04-24       1e6142           2      4          9     1           9
-##  8 2020-04-24       1a5595           2     12          9     2           9
-##  9 2020-04-24       1c21d8           2     12          9     1          15
-## 10 2020-04-24       13236c           1      4          2     2          21
-## # … with 62,324 more rows, and 55 more variables: 
+# A tibble: 62,334 x 62
+#   FECHA_ACTUALIZA… ID_REGISTRO ORIGEN SECTOR ENTIDAD_UM  SEXO ENTIDAD_NAC ENTIDAD_RES MUNICIPIO_RES TIPO_PACIENTE
+#   <fct>            <fct>        <int>  <int>      <int> <int>       <int>       <int>         <int>         <int>
+# 1 2020-04-24       09e8dc           2      9         15     1          15          15            37             2
+# 2 2020-04-24       1dd782           2     12          9     1          15           9             3             1
+# 3 2020-04-24       0efbaf           2      9         28     2          16          28            32             1
+# 4 2020-04-24       013a6c           1      3         15     2          15          15           106             1
+# 5 2020-04-24       091a48           1     12         15     2          15          15            31             2
+# 6 2020-04-24       1a72fe           1     12          9     1           9           9            11             1
+# 7 2020-04-24       1e6142           2      4          9     1           9           9             3             2
+# 8 2020-04-24       1a5595           2     12          9     2           9           9             8             1
+# 9 2020-04-24       1c21d8           2     12          9     1          15           9             9             1
+#10 2020-04-24       13236c           1      4          2     2          21           2             4             2
+## … with 62,324 more rows, and 52 more variables: FECHA_INGRESO <fct>, FECHA_SINTOMAS <fct>, FECHA_DEF <fct>,
+##   INTUBADO <int>, NEUMONIA <int>, EDAD <int>, NACIONALIDAD <int>, EMBARAZO <int>, HABLA_LENGUA_INDIG <int>,
+##   DIABETES <int>, EPOC <int>, ASMA <int>, INMUSUPR <int>, HIPERTENSION <int>, OTRA_COM <int>, CARDIOVASCULAR <int>,
+##   OBESIDAD <int>, RENAL_CRONICA <int>, TABAQUISMO <int>, OTRO_CASO <int>, RESULTADO <int>, MIGRANTE <int>,
+##   PAIS_NACIONALIDAD <fct>, PAIS_ORIGEN <fct>, UCI <int>, ORIGEN_FACTOR <fct>, SECTOR_FACTOR <fct>,
+##   ENTIDAD_UM_FACTOR <fct>, SEXO_FACTOR <fct>, ENTIDAD_NAC_FACTOR <fct>, ENTIDAD_RES_FACTOR <fct>,
+##   MUNICIPIO_RES_FACTOR <fct>, TIPO_PACIENTE_FACTOR <fct>, INTUBADO_FACTOR <fct>, NEUMONIA_FACTOR <fct>,
+##   EMBARAZO_FACTOR <fct>, HABLA_LENGUA_INDIG_FACTOR <fct>, DIABETES_FACTOR <fct>, EPOC_FACTOR <fct>, ASMA_FACTOR <fct>,
+##   INMUSUPR_FACTOR <fct>, HIPERTENSION_FACTOR <fct>, OTRA_COM_FACTOR <fct>, CARDIOVASCULAR_FACTOR <fct>,
+##   OBESIDAD_FACTOR <fct>, RENAL_CRONICA_FACTOR <fct>, TABAQUISMO_FACTOR <fct>, OTRO_CASO_FACTOR <fct>,
+##   MIGRANTE_FACTOR <fct>, UCI_FACTOR <fct>, RESULTADO_FACTOR <fct>, NACIONALIDAD_FACTOR <fct>
 
 # If you want historical data...
 cases <- datosmx::get_covid_cases(date="2020-04-12")
@@ -136,13 +146,13 @@ str(cities)
 ## $ Poblacion_2019 : int  949277 50354 60181 16766 127835 49479 57359 9551 22468 21710 ...
  
 head(cities)
-  Clave_Entidad Clave_Municipio              Nombre  Longitud  Latitud Poblacion_2019
-1             1               1      Aguascalientes -102.2958 21.81144         949277
-2             1               2            Asientos -102.0456 22.12651          50354
-3             1               3            Calvillo -102.7049 21.90069          60181
-4             1               4               Cosío -102.2970 22.36063          16766
-5             1               5         Jesús María -102.4456 21.93212         127835
-6             1               6 Pabellón de Arteaga -102.3017 22.10454          49479
+##   Clave_Entidad Clave_Municipio              Nombre  Longitud  Latitud Poblacion_2019
+## 1             1               1      Aguascalientes -102.2958 21.81144         949277
+## 2             1               2            Asientos -102.0456 22.12651          50354
+## 3             1               3            Calvillo -102.7049 21.90069          60181
+## 4             1               4               Cosío -102.2970 22.36063          16766
+## 5             1               5         Jesús María -102.4456 21.93212         127835
+## 6             1               6 Pabellón de Arteaga -102.3017 22.10454          49479
 ```
 
 #### States
